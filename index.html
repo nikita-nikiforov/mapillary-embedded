@@ -1,6 +1,40 @@
+<!DOCTYPE html>
+<html>
 <head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src='https://unpkg.com/mapillary-js@2.11.1/dist/mapillary.min.js'></script>
+    <link href='https://unpkg.com/mapillary-js@2.11.1/dist/mapillary.min.css' rel='stylesheet' />
+  
+    <style>
+        html, body { margin: 0; padding: 0; height: 100%; }
+        #mly { height: 100%; }
+    </style>
 </head>
 
 <body>
-<iframe width="640" height="480" src="https://embed-v1.mapillary.com/embed?version=1&filter=%5B%22all%22%5D&map_filter=%5B%22all%22%5D&map_style=mapbox_streets&image_key=KEXruRdFhPS1AGTvRyODMw&x=0.25861165410151987&y=0.4347306882909875&client_id=dS0xakRsTmFMbW40VzdEOG9EeG40UTpiMjZmYjcwOTQ0MmE5ZGRl&style=photo" frameborder="0"></iframe>
+    <div id='mly' style='width: 640px; height: 480px;'></div>
+
+    <script>
+        var mly = new Mapillary.Viewer(
+            'mly',
+            // Replace this with your own client ID from mapillary.com
+            'dS0xakRsTmFMbW40VzdEOG9EeG40UTpiMjZmYjcwOTQ0MmE5ZGRl',
+            null,
+            {
+                component: {
+                    cover: false,
+                }
+            });
+      
+        mly.moveToKey('KEXruRdFhPS1AGTvRyODMw').then(
+            function(node) { return; },
+            function(error) { console.error(error); });
+        
+        // Viewer size is dynamic so resize should be called every time the window size changes
+        window.addEventListener("resize", function() { mly.resize(); });
+    </script>
 </body>
+</html>
