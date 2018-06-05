@@ -19,6 +19,10 @@
     <div id='mly' style='width: 640px; height: 480px;'></div>
 
     <script>
+    var popupKeys = ['x3T5sS7t9bBr-OQVsyzz1w', 'soaafMp3ptjpNbPU5S7CnA', 'EAm-bb8NU0CgUDiNgWMbxg', '8id-lMilUBQrJPYU_lxE7A',
+      'AOmaDEwFFUITIs5UBqmDgQ', '5aUINv9Tnfy7lM37NmtOMQ', 'zCHre1KlwbJAl3feo41row', 'ZxHg5ViPQETQiyEFv3cckQ', 
+      'TYikWAikwfN_LnBOuoXmeQ', 'SlxJizQBUPRk4OFWm6fMwQ', 'O9uSHGJ6gCIguHe_J6Rllw', 'x2ZWeSnLbMD3Yi9WAV4s8A'];
+
         // Enable marker component when setting up viewer
         var mly = new Mapillary.Viewer(
             'mly',
@@ -84,7 +88,20 @@
         popup.setDOMContent(div);
         popup.setBasicPoint([0.3, 0.4]);
 
-        popupComponent.add([popup]);
+        // Show popup for the corresponding node
+        var onNodeChanged = function(node) {
+          for(popupKey of popupKeys){
+            if (node.key === popupKey) {
+                popupComponent.add([popup]);
+                break;
+            } else {
+                popupComponent.removeAll();
+            }
+          }
+        }
+
+        mly.on(Mapillary.Viewer.nodechanged, onNodeChanged);
+
     </script>
 </body>
 </html>
