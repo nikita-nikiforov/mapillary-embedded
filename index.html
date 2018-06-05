@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,9 +6,9 @@
     <title></title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-    <script src='https://unpkg.com/mapillary-js@2.11.1/dist/mapillary.min.js'></script>
-    <link href='https://unpkg.com/mapillary-js@2.11.1/dist/mapillary.min.css' rel='stylesheet' />
-  
+    <script src='https://unpkg.com/mapillary-js@2.12.1/dist/mapillary.min.js'></script>
+    <link href='https://unpkg.com/mapillary-js@2.12.1/dist/mapillary.min.css' rel='stylesheet' />
+
     <style>
         html, body { margin: 0; padding: 0; height: 100%; }
         #mly { height: 100%; }
@@ -18,23 +19,72 @@
     <div id='mly' style='width: 640px; height: 480px;'></div>
 
     <script>
+        // Enable marker component when setting up viewer
         var mly = new Mapillary.Viewer(
             'mly',
-            // Replace this with your own client ID from mapillary.com
             'dS0xakRsTmFMbW40VzdEOG9EeG40UTpiMjZmYjcwOTQ0MmE5ZGRl',
             null,
             {
                 component: {
                     cover: false,
-                }
+                    marker: true,
+                    popup: true,
+                },
             });
-      
-        mly.moveToKey('KEXruRdFhPS1AGTvRyODMw').then(
-            function(node) { return; },
-            function(error) { console.error(error); });
-        
+
+        // Create an yellow interactive simple marker and define all options
+        var interactiveMarker = new Mapillary.MarkerComponent.SimpleMarker(
+            'interactive-id',
+            { lat: 49.85206158105696, lon: 24.024174380817712 },
+            {
+                ballColor: '#469afe',
+                ballOpacity: 1.0,
+                color: 0x469afe,
+                opacity: 0.6,
+                interactive: false,
+                radius: 0.8,
+            });
+
+
+        // Add markers to component
+        var markerComponent = mly.getComponent('marker');
+        markerComponent.add([interactiveMarker]);
+
+        // Listen for marker changes
+        markerComponent.on(Mapillary.MarkerComponent.MarkerComponent.changed, function(e) {
+            console.log('Marker changed:', e.marker.id, e.marker.latLon);
+        });
+
+        mly.moveToKey('5aUINv9Tnfy7lM37NmtOMQ').catch(function(e) { console.error(e); });
+
+        mly.setCenter([0.3, 0.5]);
+
         // Viewer size is dynamic so resize should be called every time the window size changes
         window.addEventListener("resize", function() { mly.resize(); });
+
+        var popupComponent = mly.getComponent('popup');
+
+        // Create popup content
+        var div = document.createElement('div');
+        div.style.backgroundColor = "#fff";
+        div.style.borderRadius = "2px";
+        div.style.border = "2px solid #469afe";
+        div.style.color = "#469afe";
+        div.style.padding = "5px 10px";
+        div.innerHTML = 'We\'re here :)';
+
+        // Create popup and set content as well as point
+        var popup = new Mapillary.PopupComponent.Popup({
+            clean: true,
+            float: Mapillary.Alignment.Left,
+            offset: 10,
+            opacity: 0.7,
+        });
+
+        popup.setDOMContent(div);
+        popup.setBasicPoint([0.3, 0.4]);
+
+        popupComponent.add([popup]);
     </script>
 </body>
 </html>
